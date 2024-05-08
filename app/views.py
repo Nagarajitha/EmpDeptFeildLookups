@@ -97,6 +97,29 @@ def display_dept(request):
 
     #Query to get departments located in 'New York' or 'Boston' and with department names starting with 'S'
     QLDO = Dept.objects.filter(Q(LOC ='NEW YORK') | Q(LOC ='BOSTON') & Q(DNAME__startswith='S'))
+
+    #regex feild lookup
+
+    #Query to Fetch DNAME Starts with 'R'
+    QLDO = Dept.objects.filter(DNAME__iregex=r'^r')
+
+    #Query to Fetch DNAME Starts with 'R'(case insenstitve)
+    QLDO = Dept.objects.filter(DNAME__iregex=r'^a')
+
+    #Query to Fetch DNAME Not Starts with 'R' (case insensitive)
+    QLDO = Dept.objects.exclude(DNAME__iregex=r'^r')
+
+    #DNAME Starts with a Special Character( non-alphanumeric character)-->This regex matches any string where the first character is a non-word character (anything but a-z, A-Z, 0-9, and _).
+    QLDO = Dept.objects.filter(DNAME__iregex=r'^\W')
+
+    #LOC Starts with a Special Character
+    QLDO = Dept.objects.filter(LOC__iregex=r'^\W')
+
+    #Departments starting with 'A'
+    QLDO = Dept.objects.filter(DNAME__iregex=r'^A') 
+
+    # Departments ending with 'ING'
+    QLDO =Dept.objects.filter(DNAME__iregex=r'ING$')  
     
 
     d={'QLDO':QLDO}
@@ -135,7 +158,35 @@ def display_emp(request):
 
     # Retrieve data for employees hired between Jan -1- 1981, and Dec 31, 1981, with a salary either less than 1500 or greater than 3000
     QLEO = Emp.objects.filter(Q(HIREDATE__range=('1981-01-01', '1981-12-31')) & (Q(SAL__lt=1500) | Q(SAL__gt=3000)))
+
+    # Names starting with 'S'
+    QLEO =Emp.objects.filter(ENAME__iregex=r'^S')
+
+    # Names containing 'A'
+    QLEO =Emp.objects.filter(ENAME__iregex=r'A')  
     
+    # Names with exactly 5 characters
+    QLEO=Emp.objects.filter(ENAME__iregex=r'^.{5}$')  
+
+    # Names ending with 'N'
+    QLEO =Emp.objects.filter(ENAME__iregex=r'N$') 
+
+    # Job titles containing 'AN'
+    QLEO=Emp.objects.filter(JOB__iregex=r'AN')  
+
+    # Job titles ending with 'ST'
+    QLEO =Emp.objects.filter(JOB__iregex=r'ST$') 
+    
+    # Hire dates starting with '03'
+    QLEO=Emp.objects.filter(HIREDATE__iregex=r'^03')
+
+    # Hire dates ending with '81'
+    QLEO = Emp.objects.filter(HIREDATE__iregex=r'81$')  
+
+    # Hire dates containing 'DEC'
+    QLEO=Emp.objects.filter(HIREDATE__iregex=r'DEC')  
+
+
 
     #QLEO = Emp.objects.all()
 
@@ -166,6 +217,12 @@ def display_salgrade(request):
     #Retrieve all data for grades where the low salary is less than 1500 or the high salary is greater than 4000
     QLSO = Salgrade.objects.filter(Q(LOSAL__lt = 1500 ) | Q(HISAL__gt = 4000))
 
+
+    #Query to find salary grades within the range 700 and 1200
+    QLSO =Salgrade.objects.filter(GRADE=1, LOSAL__lte=700, HISAL__gte=1200)
+
+    #Query find the salary range for grade 3
+    QLSO =Salgrade.objects.filter(GRADE=3)
 
 
     #QLSO = Salgrade.objects.all()
